@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\thoma\source\repos\Genetic Polygon Imaging\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\thoma\source\repos\Genetic Polygon Imaging\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\c1031564\source\repos\Genetic-Polygon-Imaging\Include;C:\Users\thoma\source\repos\Genetic Polygon Imaging\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\c1031564\source\repos\Genetic-Polygon-Imaging\Lib;C:\Users\thoma\source\repos\Genetic Polygon Imaging\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ErrorCodes.hpp" />
+    <ClInclude Include="ProcessThreads.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Solution.hpp" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ProcessThreads.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Solution.cpp" />
