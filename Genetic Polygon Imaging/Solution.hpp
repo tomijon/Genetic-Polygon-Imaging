@@ -49,7 +49,7 @@ public:
 
 	void createVertexBuffer();
 	void createColorBuffer();
-	void createVertexArrayObject();
+	GLuint createVertexArrayObject();
 	void createEvalBuffer();
 
 	void mapVertexBuffer();
@@ -67,6 +67,15 @@ private:
 	GLuint evalBuffer;
 
 	int* vertices;
+	int numVertices;
 	int* color;
 	
+};
+
+
+struct Pixel {
+	Pixel() : x(0), y(0) {}
+	Pixel(int x, int y) : x(x), y(y) {}
+	const int x;
+	const int y;
 };
