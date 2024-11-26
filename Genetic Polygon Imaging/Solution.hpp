@@ -24,6 +24,13 @@ struct SolutionSettings {
 };
 
 
+enum SolutionState {
+	INVALID = 0,
+	VALID = 1,
+	EVALUATED = 2,
+};
+
+
 class Gene {
 public:
 	Gene(const int size) : information(new int[size]), length(size) {}
@@ -56,14 +63,22 @@ public:
 	void mapColorBuffer();
 
 private:
-	Gene* genes;
-
-	GLuint image;
-	GLuint writeTexture;
+	// Buffer maps to the vertex buffer and color attrib buffer.
+	uint32_t* vertexInformation;
+	uint32_t* colorInformation;
 
 	GLuint vertexArrayObject;
 	GLuint vertexBuffer;
 	GLuint colorBuffer;
+
+	SolutionState state = SolutionState::INVALID;
+
+	Gene* vertexGenes;
+	Gene* colorGenes;
+
+	GLuint image;
+	GLuint writeTexture;
+
 	GLuint evalBuffer;
 
 	int* vertices;
