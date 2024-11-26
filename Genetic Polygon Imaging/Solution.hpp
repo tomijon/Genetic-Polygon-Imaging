@@ -7,7 +7,7 @@
 
 
 struct SolutionSettings {
-	SolutionSettings(const std::string& config);
+	//SolutionSettings(const std::string& config);
 
 	const int MAX_POLYGONS;
 	const int RETRIES_BEFORE_NEW_POLYGON;
@@ -54,13 +54,12 @@ public:
 	Solution(SolutionSettings settings);
 	~Solution();
 
-	void createVertexBuffer();
-	void createColorBuffer();
-	GLuint createVertexArrayObject();
-	void createEvalBuffer();
+	void flushBuffers();
+	void bind();
+	void draw();
 
-	void mapVertexBuffer();
-	void mapColorBuffer();
+
+	inline SolutionState getState() { return state; }
 
 private:
 	// Buffer maps to the vertex buffer and color attrib buffer.
@@ -81,10 +80,7 @@ private:
 
 	GLuint evalBuffer;
 
-	int* vertices;
 	int numVertices;
-	int* color;
-	
 };
 
 

@@ -43,6 +43,7 @@ void Window::update() {
         close();
         return;
     }
+    glfwSwapBuffers(m_window);
 }
 
 
