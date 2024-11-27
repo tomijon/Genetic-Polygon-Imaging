@@ -26,7 +26,7 @@ Solution::Solution(SolutionSettings settings) {
 	glVertexAttribIPointer(0, 2, GL_INT, 
 		sizeof(uint32_t) * 2, nullptr);
 	glEnableVertexAttribArray(0);
-	void* vertPtr = glMapNamedBuffer(vertexBuffer, GL_WRITE_ONLY);
+	void* vertPtr = glMapNamedBuffer(vertexBuffer, GL_WRITE_ONLY | GL_MAP_FLUSH_EXPLICIT_BIT);
 	if (!vertPtr) return;
 	vertexInformation = static_cast<uint32_t*>(vertPtr);
 
@@ -40,7 +40,7 @@ Solution::Solution(SolutionSettings settings) {
 	glVertexAttribIPointer(1, 4, GL_INT, 
 		sizeof(uint32_t) * 4, nullptr);
 	glEnableVertexAttribArray(1);
-	void* colorPtr = glMapNamedBuffer(colorBuffer, GL_WRITE_ONLY);
+	void* colorPtr = glMapNamedBuffer(colorBuffer, GL_WRITE_ONLY | GL_MAP_FLUSH_EXPLICIT_BIT);
 	if (!colorPtr) return;
 	colorInformation = static_cast<uint32_t*>(colorPtr);
 
@@ -77,6 +77,7 @@ void Solution::bind() {
 
 void Solution::draw() {
 	vertexInformation[0] = 0;
+	glGetError();
 	vertexInformation[1] = 0;
 	vertexInformation[2] = 0;
 	vertexInformation[3] = 0.5;
@@ -91,6 +92,6 @@ void Solution::draw() {
 	colorInformation[6] = 255;
 	colorInformation[7] = 255;
 	bind();
-	//flushBuffers();
+	flushBuffers();
 	glDrawArrays(GL_LINES, 0, 10);
 }
