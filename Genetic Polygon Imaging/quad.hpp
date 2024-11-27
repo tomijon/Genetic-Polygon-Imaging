@@ -1,0 +1,7 @@
+class Quad {
+	Quad();
+	~Quad();
+
+
+
+};

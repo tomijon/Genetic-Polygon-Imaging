@@ -3,8 +3,8 @@
 uniform float width;
 uniform float height;
 
-layout(location = 0) in ivec2 position;
-layout(location = 1) in ivec4 in_color;
+layout(location = 0) in uvec2 position;
+layout(location = 1) in uvec4 in_color;
 
 out vec4 color;
 

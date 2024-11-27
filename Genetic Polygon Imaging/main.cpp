@@ -18,15 +18,15 @@ void APIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 }
 
 int main(int argc, char* argv[]) {
-	Window window(1280, 720);
+	Window window(400, 200, false);
 
 	if (!window.isInitialised()) {
 		std::cerr << "Failed to initialise window." << std::endl;
 		return ErrorCode::WINDOW_CREATION;
 	}
 
-	Shader screenSpace("vertex.glsl", "fragment.glsl");
-	if (!screenSpace.isInitialised()) {
+	Shader solutionShader("solution_vertex.glsl", "solution_fragment.glsl");
+	if (!solutionShader.isInitialised()) {
 		std::cerr << "Failed to create shader program." << std::endl;
 		return ErrorCode::SHADER_CREATION;
 	}
@@ -40,17 +40,22 @@ int main(int argc, char* argv[]) {
 	SolutionSettings settings(
 		100,
 		5,
-		16,
+		32,
 		20,
 		235,
 		5,
 		5,
 		5,
 		0.1,
-		0.1
+		0.1,
+		200,
+		200
 	);
 
 	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_PRIMITIVE_RESTART);
+	glPrimitiveRestartIndex(0xFFFF);
+
 	glDebugMessageCallback(MessageCallback, nullptr);
 
 	Solution test(settings);
@@ -64,10 +69,12 @@ int main(int argc, char* argv[]) {
 
 
 	glClearColor(0, 0, 0, 1);
-	glUseProgram(screenSpace.getProgram());
+	glUseProgram(solutionShader.getProgram());
 
-	glUniform1f(glGetUniformLocation(screenSpace.getProgram(), "width"), window.getWidth());
-	glUniform1f(glGetUniformLocation(screenSpace.getProgram(), "height"), window.getHeight());
+	glUniform1f(glGetUniformLocation(solutionShader.getProgram(), "width"),
+		static_cast<float>(settings.WIDTH));
+	glUniform1f(glGetUniformLocation(solutionShader.getProgram(), "height"),
+		static_cast<float>(settings.HEIGHT));
 
 
 	while (window.isOpen()) {

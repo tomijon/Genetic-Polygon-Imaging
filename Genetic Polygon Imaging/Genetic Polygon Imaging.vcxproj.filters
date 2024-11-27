@@ -33,6 +33,9 @@
     <ClInclude Include="ProcessThreads.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="quad.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -56,12 +59,24 @@
     <ClCompile Include="ProcessThreads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="quad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex.glsl">
+    <None Include="solution_vertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="fragment.glsl">
+    <None Include="solution_fragment.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MSE.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="drawtex_vertex.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="drawtext_fragment.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

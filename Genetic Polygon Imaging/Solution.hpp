@@ -21,6 +21,9 @@ struct SolutionSettings {
 
 	const float MUT_PB;
 	const float CX_PB;
+
+	const int WIDTH;
+	const int HEIGHT;
 };
 
 
@@ -33,18 +36,48 @@ enum SolutionState {
 
 class Gene {
 public:
-	Gene(const int size) : information(new int[size]), length(size) {}
-	Gene(const int size, int* data) : information(data), length(size) {}
+	Gene() : information(nullptr), length(0) {}
+	Gene(const int size) : information(new GLuint[size]), length(size) {}
+	Gene(const int size, GLuint* data) : information(data), length(size) {}
+	
+	Gene(const Gene& other) : information(new GLuint[other.length]), length(other.length) {
+		for (int i = 0; i < length; i++) {
+			information[i] = other.information[i];
+		}
+	}
+
+	Gene(Gene&& other) noexcept : information(other.information), length(other.length) {
+		other.information = nullptr;
+	}
+	
 	virtual ~Gene() { if (information != nullptr) delete[] information; }
 
-	inline void setGene(int gene, int data) { information[gene] = data; }
+	inline void setGene(int gene, GLuint data) { information[gene] = data; }
 	inline int getGene(int gene) const { return information[gene]; }
 
-	inline const int* getInformation() const { return information; }
+	inline const GLuint* getInformation() const { return information; }
 	inline int getLength() const { return length; }
 
+	Gene operator=(const Gene& other) {
+		length = other.length;
+		information = new GLuint[length];
+
+		for (int i = 0; i < length; i++) {
+			information[i] = other.information[i];
+		}
+		return *this;
+	}
+
+	Gene operator=(Gene&& other) noexcept {
+		information = other.information;
+		length = other.length;
+		other.information = nullptr;
+		return *this;
+	}
+
+
 private:
-	int* information;
+	GLuint* information;
 	int length;
 };
 
@@ -54,33 +87,51 @@ public:
 	Solution(SolutionSettings settings);
 	~Solution();
 
+	void initVertexBuffer();
+	void initColorBuffer();
+	void initFramebuffer();
+	void initDrawTexture();
+	void mapGenes();
+
 	void flushBuffers();
-	void bind();
 	void draw();
 
-
-	inline SolutionState getState() { return state; }
+	inline SolutionState getState() const { return state; }
+	inline unsigned int getWidth() const { return width; }
+	inline unsigned int getHeight() const { return height; }
 
 private:
 	// Buffer maps to the vertex buffer and color attrib buffer.
-	uint32_t* vertexInformation;
-	uint32_t* colorInformation;
+	GLuint* vertexInformation = nullptr;
+	GLuint* colorInformation = nullptr;
+	GLuint* elementInformation = nullptr;
+	GLfloat* evalResults = nullptr;
 
-	GLuint vertexArrayObject;
-	GLuint vertexBuffer;
-	GLuint colorBuffer;
+	// OpenGL Buffers.
+	GLuint vertexArrayObject = 0;
+	GLuint vertexBuffer = 0;
+	GLuint colorBuffer = 0;
+	GLuint elementBuffer = 0;	// numVertices + maxPolygons
+
+	GLuint evalBuffer = 0;	// Buffer storing MSE results.
+	GLuint framebuffer = 0;	// Where texture will be drawn.
+	GLuint drawTexture = 0; // Texture to draw to.
 
 	SolutionState state = SolutionState::INVALID;
 
-	Gene* vertexGenes;
-	Gene* colorGenes;
+	// Maps to vertexInformation and colorInformation.
+	// Used for genetic operations.
+	Gene* vertexGenes = nullptr;
+	Gene* colorGenes = nullptr;
 
-	GLuint image;
-	GLuint writeTexture;
+	// General data.
+	const unsigned int verticesPerPolygon;
+	const unsigned int maxPolygons;
+	int currentPolygons = 0;
 
-	GLuint evalBuffer;
-
-	int numVertices;
+	const int numVertices;
+	const int width;
+	const int height;
 };
 
 

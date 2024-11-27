@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-Window::Window(int width, int height) 
+Window::Window(int width, int height, bool vsync) 
     : m_width(width), m_height(height)
 {
     if (initialised) return;
@@ -16,6 +16,8 @@ Window::Window(int width, int height)
 
     glfwMakeContextCurrent(m_window);
     gladLoadGL();
+
+    if (!vsync) glfwSwapInterval(0);
 
     initialised = true;
 }
