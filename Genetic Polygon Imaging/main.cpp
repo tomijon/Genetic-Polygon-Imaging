@@ -20,8 +20,6 @@ void APIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 int main(int argc, char* argv[]) {
 	Window window(1280, 720);
 
-	
-
 	if (!window.isInitialised()) {
 		std::cerr << "Failed to initialise window." << std::endl;
 		return ErrorCode::WINDOW_CREATION;
@@ -66,6 +64,10 @@ int main(int argc, char* argv[]) {
 
 
 	glClearColor(0, 0, 0, 1);
+	glUseProgram(screenSpace.getProgram());
+
+	glUniform1f(glGetUniformLocation(screenSpace.getProgram(), "width"), window.getWidth());
+	glUniform1f(glGetUniformLocation(screenSpace.getProgram(), "height"), window.getHeight());
 
 
 	while (window.isOpen()) {

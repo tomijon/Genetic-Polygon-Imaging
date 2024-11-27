@@ -21,12 +21,13 @@ Solution::Solution(SolutionSettings settings) {
 		vertexBuffer,
 		sizeof(uint32_t) * numVertices * 2,
 		vertexInformation,
-		GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT
+		GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT 
 	);
 	glVertexAttribIPointer(0, 2, GL_INT, 
 		sizeof(uint32_t) * 2, nullptr);
 	glEnableVertexAttribArray(0);
-	void* vertPtr = glMapNamedBuffer(vertexBuffer, GL_WRITE_ONLY | GL_MAP_FLUSH_EXPLICIT_BIT);
+	void* vertPtr = glMapNamedBufferRange(vertexBuffer, 0, sizeof(uint32_t) * 2 * numVertices,
+		GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT |GL_MAP_FLUSH_EXPLICIT_BIT);
 	if (!vertPtr) return;
 	vertexInformation = static_cast<uint32_t*>(vertPtr);
 
@@ -40,7 +41,8 @@ Solution::Solution(SolutionSettings settings) {
 	glVertexAttribIPointer(1, 4, GL_INT, 
 		sizeof(uint32_t) * 4, nullptr);
 	glEnableVertexAttribArray(1);
-	void* colorPtr = glMapNamedBuffer(colorBuffer, GL_WRITE_ONLY | GL_MAP_FLUSH_EXPLICIT_BIT);
+	void* colorPtr = glMapNamedBufferRange(colorBuffer, 0, sizeof(uint32_t) * 4 * numVertices,
+		GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT |GL_MAP_FLUSH_EXPLICIT_BIT);
 	if (!colorPtr) return;
 	colorInformation = static_cast<uint32_t*>(colorPtr);
 
@@ -52,8 +54,8 @@ Solution::Solution(SolutionSettings settings) {
 
 
 Solution::~Solution() {
-	delete[] vertexInformation;
-	delete[] colorInformation;
+	glUnmapNamedBuffer(vertexBuffer);
+	glUnmapNamedBuffer(colorBuffer);
 
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &colorBuffer);
@@ -70,28 +72,25 @@ void Solution::flushBuffers() {
 }
 
 
-void Solution::bind() {
-	glBindVertexArray(vertexArrayObject);
-}
-
-
 void Solution::draw() {
-	vertexInformation[0] = 0;
-	glGetError();
-	vertexInformation[1] = 0;
-	vertexInformation[2] = 0;
-	vertexInformation[3] = 0.5;
-	vertexInformation[4] = 0.5;
-	vertexInformation[5] = 0.5;
-	colorInformation[0] = 255;
-	colorInformation[1] = 255;
-	colorInformation[2] = 255;
-	colorInformation[3] = 255;
-	colorInformation[4] = 255;
-	colorInformation[5] = 255;
-	colorInformation[6] = 255;
-	colorInformation[7] = 255;
-	bind();
+	for (int i = 0; i < numVertices; i++) {
+		int vertIndex = (i * 2);
+		int colorIndex = (i * 4);
+
+		vertexInformation[vertIndex + 0] = rand() % 1280;
+		vertexInformation[vertIndex + 1] = rand() % 720;
+
+		colorInformation[colorIndex + 0] = rand() % 255;
+		colorInformation[colorIndex + 1] = rand() % 255;
+		colorInformation[colorIndex + 2] = rand() % 255;
+		colorInformation[colorIndex + 3] = 255;
+	}
+
+
+	glBindVertexArray(vertexArrayObject);
+
 	flushBuffers();
-	glDrawArrays(GL_LINES, 0, 10);
+	glDrawArrays(GL_TRIANGLES, 0, 553);
+
+	glBindVertexArray(0);
 }
