@@ -108,6 +108,15 @@ void Solution::initColorBuffer() {
 }
 
 
+void Solution::initEvalBuffer() {
+	glGenBuffers(1, &evalBuffer);
+	if (!evalBuffer) return;
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, evalBuffer);
+
+}
+
+
 void Solution::initFramebuffer() {
 	glGenFramebuffers(1, &framebuffer);
 	if (!framebuffer) return;
@@ -129,11 +138,13 @@ void Solution::initDrawTexture() {
 	if (!drawTexture) return;
 
 	glBindTexture(GL_TEXTURE_2D, drawTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -176,11 +187,15 @@ void Solution::draw() {
 		colorInformation[colorIndex + 2] = rand() % 255;
 		colorInformation[colorIndex + 3] = 255;
 	}
+	glViewport(0, 0, width, height);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glBindVertexArray(vertexArrayObject);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	flushBuffers();
-	glDrawArrays(GL_TRIANGLES, 0, 30);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 33);
 
 	glBindVertexArray(0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

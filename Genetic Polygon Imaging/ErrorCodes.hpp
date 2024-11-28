@@ -6,4 +6,5 @@ namespace ErrorCode {
 	constexpr int SHADER_CREATION	= 2;
 	constexpr int RENDERER_CREATION = 3;
 	constexpr int SOLUTION_CREATION = 4;
+	constexpr int TARGET_LOADING	= 5;
 }

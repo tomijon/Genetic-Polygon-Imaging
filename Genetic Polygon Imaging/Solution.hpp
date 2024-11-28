@@ -89,6 +89,7 @@ public:
 
 	void initVertexBuffer();
 	void initColorBuffer();
+	void initEvalBuffer();
 	void initFramebuffer();
 	void initDrawTexture();
 	void mapGenes();
@@ -96,6 +97,7 @@ public:
 	void flushBuffers();
 	void draw();
 
+	inline GLuint getResultImage() const { return drawTexture; }
 	inline SolutionState getState() const { return state; }
 	inline unsigned int getWidth() const { return width; }
 	inline unsigned int getHeight() const { return height; }

@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -10,6 +9,9 @@
 #include "ErrorCodes.hpp"
 #include "Shader.hpp"
 #include "Solution.hpp"
+#include "quad.hpp"
+#include "ImageHandler.hpp"
+
 
 
 void APIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
@@ -27,7 +29,13 @@ int main(int argc, char* argv[]) {
 
 	Shader solutionShader("solution_vertex.glsl", "solution_fragment.glsl");
 	if (!solutionShader.isInitialised()) {
-		std::cerr << "Failed to create shader program." << std::endl;
+		std::cerr << "Failed to create solution shader program." << std::endl;
+		return ErrorCode::SHADER_CREATION;
+	}
+
+	Shader textureShader("drawtex_vertex.glsl", "drawtex_fragment.glsl");
+	if (!textureShader.isInitialised()) {
+		std::cerr << "Failed to create texture shader program." << std::endl;
 		return ErrorCode::SHADER_CREATION;
 	}
 
@@ -37,10 +45,16 @@ int main(int argc, char* argv[]) {
 		return ErrorCode::RENDERER_CREATION;
 	}
 
+	GLuint targetImage = ImageHandler::load_image_as_texture("darwin.png");
+	if (!targetImage) {
+		std::cerr << "Failed to load target image." << std::endl;
+		return ErrorCode::TARGET_LOADING;
+	}
+
 	SolutionSettings settings(
 		100,
 		5,
-		32,
+		16,
 		20,
 		235,
 		5,
@@ -67,6 +81,10 @@ int main(int argc, char* argv[]) {
 		return ErrorCode::SOLUTION_CREATION;
 	}
 
+	GLfloat evalVertices[8] = {0, -1, 1, -1, 0, 1, 1, 1};
+	GLfloat targetVertices[8] = {-1, -1, 0, -1, -1, 1, 0, 1};
+	Quad evaluated = Quad(&evalVertices[0]);
+	Quad target = Quad(&targetVertices[0]);
 
 	glClearColor(0, 0, 0, 1);
 	glUseProgram(solutionShader.getProgram());
@@ -82,8 +100,27 @@ int main(int argc, char* argv[]) {
 		window.update();
 		if (!window.isOpen()) continue;
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(solutionShader.getProgram());
 		test.draw();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, window.getWidth(), window.getHeight());
+		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(textureShader.getProgram());
+		glActiveTexture(GL_TEXTURE0);
+		glUniform1i(glGetUniformLocation(
+			textureShader.getProgram(), "drawTex"), 0);
+
+		glBindTexture(GL_TEXTURE_2D, targetImage);
+		target.draw();
+				
+		glBindTexture(GL_TEXTURE_2D, test.getResultImage());
+		evaluated.draw();
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
+		
 
 		if (glGetError() != GL_NO_ERROR) {
 			std::cerr << "OpenGL Error: " << glGetError() << std::endl;

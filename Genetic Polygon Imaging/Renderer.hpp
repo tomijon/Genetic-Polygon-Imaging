@@ -23,9 +23,6 @@ class Renderer {
 public:
 	Renderer();
 	Renderer(const Renderer& other) = delete;
-	Renderer(Renderer&& other) {
-
-	}
 
 	~Renderer();
 

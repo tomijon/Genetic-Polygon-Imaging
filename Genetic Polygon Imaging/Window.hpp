@@ -10,7 +10,7 @@ class Window {
 public:
 	Window(int width, int height, bool vsync = true);
 	Window(const Window& other) = delete;
-	Window(Window&& other) : m_width(other.m_width), m_height(other.m_height), m_window(other.m_window) {
+	Window(Window&& other) noexcept : m_width(other.m_width), m_height(other.m_height), m_window(other.m_window) {
 		other.m_width = 0;
 		other.m_height = 0;
 		other.m_window = nullptr;

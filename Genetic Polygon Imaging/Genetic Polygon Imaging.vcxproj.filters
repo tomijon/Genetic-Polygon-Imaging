@@ -36,6 +36,9 @@
     <ClInclude Include="quad.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -62,6 +65,15 @@
     <ClCompile Include="quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneticAlgorithm.hpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneticAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="solution_vertex.glsl">
@@ -76,8 +88,13 @@
     <None Include="drawtex_vertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="drawtext_fragment.glsl">
+    <None Include="drawtex_fragment.glsl">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="darwin.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
